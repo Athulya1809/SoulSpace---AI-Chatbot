@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard – MindCare</title>
+    <style>
+    body {
+        margin: 0;
+        font-family: "Segoe UI", Arial, sans-serif;
+        color: white;
+        overflow: hidden;
+    }
+
+    /* Background Video */
+    .bg-video {
+        position: fixed;
+        top: 0;
+        left: 0;
+        min-width: 100%;
+        min-height: 100%;
+        object-fit: cover;
+        z-index: -2;
+    }
+
+    /* Dark Overlay */
+    .video-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        z-index: -1;
+    }
+
+    /* Navbar */
+    .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 40px;
+        background-color: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(8px);
+        position: relative;
+        z-index: 2;
+    }
+
+    .navbar h2 {
+        color: #5cc8ff;
+        margin: 0;
+    }
+
+    .nav-buttons a {
+        margin-left: 15px;
+        text-decoration: none;
+    }
+
+    .nav-buttons button {
+        background: transparent;
+        border: 1px solid #5cc8ff;
+        color: white;
+        padding: 8px 14px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: all 0.3s ease;
+    }
+
+    .nav-buttons button:hover {
+        background-color: #5cc8ff;
+        color: black;
+        box-shadow: 0 0 12px #5cc8ff;
+    }
+
+    /* Center Content */
+    .center {
+        height: calc(100vh - 70px);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        position: relative;
+        z-index: 2;
+    }
+
+    .center h1 {
+        font-size: 38px;
+        margin-bottom: 30px;
+    }
+
+    /* Start Chat Button */
+    .chat-btn {
+        padding: 18px 40px;
+        font-size: 18px;
+        background: linear-gradient(135deg, #5cc8ff, #3ea6ff);
+        border: none;
+        border-radius: 40px;
+        color: black;
+        cursor: pointer;
+        box-shadow: 0 0 20px rgba(92, 200, 255, 0.6);
+        transition: transform 0.3s ease;
+    }
+
+    .chat-btn:hover {
+        transform: scale(1.08);
+        box-shadow: 0 0 35px rgba(92, 200, 255, 1);
+    }
+
+</style>
+</head>
+<body>
+
+<!-- Background Video -->
+<video autoplay muted loop playsinline class="bg-video">
+    <source src="{{ url_for('static', filename='background1.mp4') }}" type="video/mp4">
+</video>
+<div class="video-overlay"></div>
+
+<!-- NAVBAR -->
+<div class="navbar">
+    <h2>SoulSpace</h2>
+
+    <div class="nav-buttons">
+        <a href="/dashboard"><button>Home</button></a>
+        <a href="/about"><button>About</button></a>
+        <a href="/profile"><button>Profile</button></a>
+        <a href="/activities"><button>Activities</button></a>
+        <a href="/logout"><button>Logout</button></a>
+    </div>
+</div>
+
+<!-- CENTER CONTENT -->
+<div class="center">
+    <h1 align="center">Welcome to your personal space👋</h1>
+    <h2>Share your thoughts with me. You can speak freely here--no judgement, no pressure.</h2>
+    <a href="/ai_chat/connect">
+        <button class="chat-btn">
+            Let's Connect
+        </button>
+    </a>
+</div>
+
+</body>
+</html>

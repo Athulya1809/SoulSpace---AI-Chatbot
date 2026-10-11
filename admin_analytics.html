@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin Analytics – MindCare</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+body {
+    margin: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: url("{{ url_for('static', filename='background2.jpeg') }}") no-repeat center center fixed;
+    background-size: cover;
+    color: white;
+}
+/* Dark overlay for readability */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: -1;
+}
+
+/* HEADER */
+.header{
+    background:rgba(0,0,0,0.6);
+    padding:15px 40px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    backdrop-filter:blur(8px);
+}
+
+.header h2{
+    color:#5cc8ff;
+    margin:0;
+}
+
+.header a{
+    color:white;
+    text-decoration:none;
+    border:1px solid #5cc8ff;
+    padding:8px 14px;
+    border-radius:20px;
+}
+
+.header a:hover{
+    background:#5cc8ff;
+    color:black;
+}
+
+/* CONTAINER */
+.container{
+    padding:40px;
+    max-width:1100px;
+    margin:auto;
+}
+
+/* CARDS */
+.cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
+    margin-bottom:40px;
+}
+
+.card{
+    background:rgba(30,30,30,0.9);
+    padding:25px;
+    border-radius:18px;
+    text-align:center;
+    box-shadow:0 0 20px #5cc8ff;
+}
+
+.card h3{
+    color:#5cc8ff;
+}
+
+.card p{
+    font-size:28px;
+    font-weight:bold;
+}
+
+/* CHART */
+.chart-box{
+    background:rgba(30,30,30,0.9);
+    padding:30px;
+    border-radius:18px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+    <h2>📊 Analytics Dashboard</h2>
+    <a href="/admin/dashboard">Back</a>
+</div>
+
+<div class="container">
+
+    <!-- STATS -->
+    <div class="cards">
+        <div class="card">
+            <h3>Total Users</h3>
+            <p>{{ total_users }}</p>
+        </div>
+
+        <div class="card">
+            <h3>Active Users</h3>
+            <p>{{ active_users }}</p>
+        </div>
+
+        <div class="card">
+            <h3>Deactivated Users</h3>
+            <p>{{ inactive_users }}</p>
+        </div>
+
+        <div class="card">
+            <h3>Journal Entries</h3>
+            <p>{{ journal_count }}</p>
+        </div>
+    </div>
+
+    <!-- CHART -->
+    <div class="chart-box">
+        <h3 style="color:#5cc8ff;">Journal Entries Over Time</h3>
+        <div id="chartContainer" style="height:320px;">
+            <canvas id="journalChart"></canvas>
+        </div>
+    </div>
+
+</div>
+
+ <script>
+const labels = JSON.parse('{{ journal_labels | tojson | safe }}');
+const values = JSON.parse('{{ journal_values | tojson | safe }}');
+
+// 🚨 HARD STOP: do NOT render chart if no data
+if (!labels || labels.length === 0 || labels.length !== values.length) {
+    document.getElementById("chartContainer").innerHTML =
+        "<p style='opacity:0.7;text-align:center;'>No journal data available yet.</p>";
+} else {
+    const ctx = document.getElementById("journalChart").getContext("2d");
+
+    new Chart(ctx, {
+        type: "line",
+        data: {
+            labels: labels,
+            datasets: [{
+                label: "Journal Entries",
+                data: values,
+                borderColor: "#5cc8ff",
+                backgroundColor: "#4a5e68",
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            animation: false,   // 🔥 prevents render loops
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+}
+</script>
+
+</body>
+</html>

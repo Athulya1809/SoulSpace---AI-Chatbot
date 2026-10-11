@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Wellness Word Scramble</title>
+
+<style>
+body{
+margin:0;
+font-family:"Segoe UI",sans-serif;
+background: url("{{ url_for('static', filename='act6.jpeg') }}") no-repeat center center fixed;
+background-size: cover;
+color:white;
+text-align:center;
+overflow-x:hidden;
+}
+
+/* Dark overlay */
+body::before{
+content:"";
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.65);
+z-index:-1;
+}
+
+/* Header */
+.header{
+background:rgba(0,0,0,0.6);
+padding:15px 40px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+backdrop-filter:blur(8px);
+position:relative;
+z-index:2;
+}
+
+.header h2{
+color:#5cc8ff;
+margin:0;
+}
+
+.header a{
+color:white;
+text-decoration:none;
+border:1px solid #5cc8ff;
+padding:8px 14px;
+border-radius:20px;
+transition:all 0.3s ease;
+}
+
+.header a:hover{
+background:#5cc8ff;
+color:black;
+box-shadow:0 0 12px #5cc8ff;
+}
+
+/* Main Container */
+.container{
+background:rgba(0,0,0,0.75);
+padding:30px;
+width:400px;
+margin:80px auto;
+border-radius:20px;
+box-shadow:0 0 25px rgba(92,200,255,0.4);
+animation:fadeUp 0.6s ease;
+position:relative;
+z-index:2;
+}
+
+@keyframes fadeUp{
+from{opacity:0; transform:translateY(15px);}
+to{opacity:1; transform:translateY(0);}
+}
+
+/* Scrambled Word */
+.scramble{
+font-size:32px;
+letter-spacing:6px;
+margin:20px 0;
+color:#5cc8ff;
+}
+
+/* Input */
+input{
+padding:12px;
+border-radius:10px;
+border:none;
+width:80%;
+}
+
+/* Buttons */
+button{
+margin-top:15px;
+padding:10px 20px;
+border:none;
+border-radius:25px;
+background:linear-gradient(135deg,#5cc8ff,#3ea6ff);
+color:black;
+font-weight:bold;
+cursor:pointer;
+transition:0.3s ease;
+}
+
+button:hover{
+box-shadow:0 0 20px rgba(92,200,255,1);
+transform:scale(1.05);
+}
+
+/* Result Text */
+#result{
+margin-top:15px;
+}
+
+/* Score */
+#score{
+color:#5cc8ff;
+}
+</style>
+</head>
+
+<body>
+<div class="header">
+    <h2>🧩 Word Scramble</h2>
+    <a href="/activities">Back</a>
+</div>
+
+<div class="container">
+
+<div class="scramble" id="scrambledWord"></div>
+
+<input type="text" id="userInput" placeholder="Type the correct word">
+
+<br>
+
+<button onclick="checkWord()">Check</button>
+<button onclick="nextWord()">Next Word</button>
+
+<h3 id="result"></h3>
+<h4 id="score">Score: 0</h4>
+
+</div>
+
+<script>
+
+const words=[
+"relax","calm","peace","breathe","focus",
+"happy","smile","mind","rest","balance"
+];
+
+let currentWord="";
+let score=0;
+
+function scramble(word){
+return word.split('').sort(()=>0.5-Math.random()).join('');
+}
+
+function loadWord(){
+currentWord=words[Math.floor(Math.random()*words.length)];
+document.getElementById("scrambledWord").innerText=scramble(currentWord);
+document.getElementById("userInput").value="";
+document.getElementById("result").innerText="";
+}
+
+function checkWord(){
+
+let answer=document.getElementById("userInput").value.toLowerCase();
+
+if(answer===currentWord){
+
+score++;
+document.getElementById("result").innerText="Great! That was correct 🌿";
+document.getElementById("score").innerText="Score: "+score;
+
+}else{
+
+document.getElementById("result").innerText="Try again 🙂";
+
+}
+
+}
+
+function nextWord(){
+loadWord();
+}
+
+loadWord();
+
+</script>
+
+</body>
+</html>

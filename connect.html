@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Connect – SoulSpace</title>
+<style>
+body{
+    margin:0;
+    font-family:"Segoe UI",sans-serif;
+    background:url("{{ url_for('static', filename='background2.jpeg') }}") no-repeat center center fixed;
+    background-size:cover;
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    height:100vh;
+}
+body::before{
+    content:"";
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.6);
+    z-index:-1;
+}
+.header {
+    background: rgba(0,0,0,0.6);
+    padding: 15px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    backdrop-filter: blur(8px);
+    position: absolute;
+    top: 0;
+    width: 100%;
+}
+.header h2 {
+    color: #5cc8ff;
+    margin: 0;
+}
+.header a {
+    color: white;
+    text-decoration: none;
+    border: 1px solid #5cc8ff;
+    padding: 8px 14px;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+}
+.header a:hover {
+    background-color: #5cc8ff;
+    color: black;
+    box-shadow: 0 0 12px #5cc8ff;
+}
+.container{
+    background:rgba(0,0,0,0.75);
+    padding:40px;
+    border-radius:20px;
+    width:500px;
+    text-align:center;
+    box-shadow:0 0 30px rgba(92,200,255,0.4);
+    margin-top:80px;
+}
+h2{
+    color:#5cc8ff;
+    margin-bottom:20px;
+}
+.options{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    justify-content:center;
+}
+.option-btn{
+    padding:10px 15px;
+    border-radius:20px;
+    border:1px solid #5cc8ff;
+    cursor:pointer;
+    background:transparent;
+    color:white;
+    transition:0.3s;
+}
+.option-btn:hover{
+    background:#5cc8ff;
+    color:black;
+}
+.option-btn.selected{
+    background:#5cc8ff;
+    color:black;
+}
+.add-btn{
+    margin-top:15px;
+    padding:10px 20px;
+    border-radius:25px;
+    border:1px solid #5cc8ff;
+    background:rgba(92,200,255,0.1);
+    color:#5cc8ff;
+    cursor:pointer;
+    transition:0.3s ease;
+}
+.add-btn:hover{
+    background:#5cc8ff;
+    color:black;
+    box-shadow:0 0 15px #5cc8ff;
+}
+#custom-section{
+    display:none;
+    margin-top:15px;
+    animation:fadeIn 0.4s ease;
+}
+@keyframes fadeIn{
+    from{opacity:0; transform:translateY(-5px);}
+    to{opacity:1; transform:translateY(0);}
+}
+#custom-input{
+    padding:12px 15px;
+    border-radius:25px;
+    border:2px solid #5cc8ff;
+    background:rgba(0,0,0,0.6);
+    color:white;
+    width:65%;
+    outline:none;
+    transition:0.3s ease;
+}
+#custom-input:focus{
+    box-shadow:0 0 12px #5cc8ff;
+}
+.custom-add-btn{
+    padding:10px 18px;
+    border-radius:25px;
+    border:none;
+    background:linear-gradient(135deg,#5cc8ff,#3ea6ff);
+    color:black;
+    font-weight:bold;
+    cursor:pointer;
+    margin-left:8px;
+    transition:0.3s ease;
+}
+.custom-add-btn:hover{
+    box-shadow:0 0 15px #5cc8ff;
+}
+#chat-btn{
+    margin-top:20px;
+    padding:12px 25px;
+    border:none;
+    border-radius:25px;
+    background:linear-gradient(135deg,#5cc8ff,#3ea6ff);
+    color:black;
+    font-weight:bold;
+    cursor:pointer;
+}
+#chat-btn:hover{
+    box-shadow:0 0 20px #5cc8ff;
+}
+#message{
+    margin-top:15px;
+    font-weight:bold;
+    color:#5cc8ff;
+}
+
+</style>
+</head>
+<body>
+<div class="header">
+    <h2>  SoulSpace Connect 💬</h2>
+    <a href="/dashboard">Back</a>
+</div>
+<div class="container">
+    <h2>Whom do you want to talk?</h2>
+    <form method="POST" id="connect-form">
+    <div class="options" id="options">
+        <div class="option-btn">Mother</div>
+        <div class="option-btn">Father</div>
+        <div class="option-btn">Brother</div>
+        <div class="option-btn">Sister</div>
+        <div class="option-btn">Friend</div>
+        <div class="option-btn">Teacher</div>
+        <div class="option-btn">Boyfriend</div>
+        <div class="option-btn">Stranger</div>
+    </div>
+    <input type="hidden" name="person" id="selected-person">
+    <button type="button" class="add-btn" onclick="showCustom()">+ Add Other</button>
+    <div id="custom-section">
+        <input type="text" id="custom-input" placeholder="Enter person's name">
+        <button type="button" class="custom-add-btn" onclick="addPerson()">Add</button>
+    </div>
+    <button type="submit" id="chat-btn">Chat</button>
+    <div id="message"></div>
+    </form>
+</div>
+<script>
+let selected = null;
+document.querySelectorAll(".option-btn").forEach(btn=>{
+    btn.addEventListener("click",function(){
+        document.querySelectorAll(".option-btn").forEach(b=>b.classList.remove("selected"));
+        this.classList.add("selected");
+        selected = this.innerText;
+        document.getElementById("selected-person").value = selected;
+    });
+});
+function showCustom(){
+    document.getElementById("custom-section").style.display="block";
+}
+function addPerson(){
+    const name = document.getElementById("custom-input").value.trim();
+    if(name==="") return;
+    const newBtn = document.createElement("div");
+    newBtn.className="option-btn selected";
+    newBtn.innerText=name;
+    document.querySelectorAll(".option-btn").forEach(b=>b.classList.remove("selected"));
+    newBtn.addEventListener("click",function(){
+        document.querySelectorAll(".option-btn").forEach(b=>b.classList.remove("selected"));
+        this.classList.add("selected");
+        selected = this.innerText;
+        document.getElementById("selected-person").value = selected;
+    });
+    document.getElementById("options").appendChild(newBtn);
+    selected = name;
+    document.getElementById("selected-person").value = name;
+    document.getElementById("custom-input").value="";
+}
+document.getElementById("connect-form").addEventListener("submit",function(e){
+    if(!selected){
+        e.preventDefault();
+        document.getElementById("message").innerText="Please select a person first.";
+        return;
+    }
+    document.getElementById("message").innerText="You can talk with " + selected;
+});
+</script>
+</body>
+</html>

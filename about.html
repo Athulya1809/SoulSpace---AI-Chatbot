@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>About – MindCare</title>
+
+    <style>
+        body {
+    margin: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: url("{{ url_for('static', filename='background2.jpeg') }}") no-repeat center center fixed;
+    background-size: cover;
+    color: white;
+}
+
+/* Dark overlay */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: -1;
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+    position: relative;
+    z-index: 2;
+}
+
+.navbar h2 {
+    color: #5cc8ff;
+    margin: 0;
+}
+
+.nav-buttons a {
+    margin-left: 15px;
+    text-decoration: none;
+}
+
+.nav-buttons button {
+    background: transparent;
+    border: 1px solid #5cc8ff;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.nav-buttons button:hover {
+    background-color: #5cc8ff;
+    color: black;
+    box-shadow: 0 0 12px #5cc8ff;
+}
+
+/* About Content Card */
+.content {
+    max-width: 900px;
+    margin: 100px auto;
+    padding: 35px;
+    background-color: rgba(0, 0, 0, 0.75);
+    border-radius: 18px;
+    box-shadow: 0 0 25px rgba(92, 200, 255, 0.4);
+    animation: fadeUp 0.8s ease;
+    position: relative;
+    z-index: 2;
+}
+
+.content h1 {
+    color: #5cc8ff;
+    margin-bottom: 20px;
+}
+
+.content p {
+    font-size: 18px;
+    line-height: 1.7;
+    margin-bottom: 15px;
+    opacity: 0.9;
+}
+
+/* Animation */
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}      
+    </style>
+</head>
+
+<body>
+
+    <!-- Animated Orbs -->
+    <div class="orb one"></div>
+    <div class="orb two"></div>
+
+    <!-- NAVBAR -->
+    <div class="navbar">
+        <h2>SoulSpace</h2>
+
+        <div class="nav-buttons">
+            <a href="/dashboard"><button>Home</button></a>
+            <a href="/about"><button>About</button></a>
+            <a href="/profile"><button>Profile</button></a>
+            <a href="/activities"><button>Activities</button></a>
+            <a href="/logout"><button>Logout</button></a>
+        </div>
+    </div>
+
+    <!-- ABOUT CONTENT -->
+    <div class="content">
+        <h1>SOUL SPACE</h1>
+
+        <p>
+            <strong>Soul Space</strong> is an AI-powered smart chatbot
+            designed to provide emotional support, stress relief, and relaxation
+            guidance through natural conversation.
+        </p>
+
+        <p>
+            Soul Space is a user-friendly emotional support platform designed to provide a 
+            safe and comforting digital environment for individuals to express their thoughts 
+            and feelings. The system integrates an intelligent AI chatbot that interacts with 
+            users in a natural and empathetic manner, helping them cope with stress, anxiety, 
+            and everyday challenges. In addition to conversational support, Soul Space offers various 
+            activities such as journaling, relaxation exercises, and interactive games to promote mental 
+            well-being. With a focus on privacy, personalization, and ease of use, the platform aims to act 
+            as a reliable companion, encouraging self-reflection and emotional balance in a simple and accessible way.
+        </p>
+    </div>
+
+</body>
+</html>

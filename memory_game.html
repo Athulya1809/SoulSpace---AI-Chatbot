@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Memory Wellness Game</title>
+
+<style>
+body{
+margin:0;
+font-family:"Segoe UI",sans-serif;
+background: url("{{ url_for('static', filename='act5.jpeg') }}") no-repeat center center fixed;
+background-size: cover;
+color:white;
+text-align:center;
+overflow-x:hidden;
+}
+
+/* Dark overlay */
+body::before{
+content:"";
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.65);
+z-index:-1;
+}
+
+/* Header */
+.header{
+background:rgba(0,0,0,0.6);
+padding:15px 40px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+backdrop-filter:blur(8px);
+position:relative;
+z-index:2;
+}
+
+.header h2{
+color:#5cc8ff;
+margin:0;
+}
+
+.header a{
+color:white;
+text-decoration:none;
+border:1px solid #5cc8ff;
+padding:8px 14px;
+border-radius:20px;
+transition:all 0.3s ease;
+}
+
+.header a:hover{
+background:#5cc8ff;
+color:black;
+box-shadow:0 0 12px #5cc8ff;
+}
+
+/* Game Container */
+.container{
+display:grid;
+grid-template-columns:repeat(4,100px);
+gap:15px;
+justify-content:center;
+margin:40px auto;
+position:relative;
+z-index:2;
+}
+
+/* Cards */
+.card{
+width:100px;
+height:100px;
+background:linear-gradient(135deg,#5cc8ff,#3ea6ff);
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:30px;
+border-radius:12px;
+cursor:pointer;
+animation:fadeUp 0.6s ease;
+transition:transform 0.3s ease, box-shadow 0.3s ease;
+color:black;
+}
+
+.card:hover{
+transform:scale(1.08);
+box-shadow:0 0 20px rgba(92,200,255,0.8);
+}
+
+/* Hidden state */
+.hidden{
+background:rgba(0,0,0,0.75);
+}
+
+/* Status Text */
+#status{
+margin-top:20px;
+color:#5cc8ff;
+}
+
+/* Animation */
+@keyframes fadeUp{
+from{opacity:0; transform:translateY(15px);}
+to{opacity:1; transform:translateY(0);}
+}
+</style>
+</head>
+
+<body>
+<div class="header">
+    <h2>🧠 Memory Match</h2>
+    <a href="/activities">Back</a>
+</div>
+
+<h2>🧠 Memory Match – Wellness Edition</h2>
+<p>Match calming symbols to improve focus</p>
+
+<div class="container" id="game"></div>
+
+<h3 id="status"></h3>
+
+<script>
+
+const emojis=["🌿","🌿","🧘","🧘","🌸","🌸","☀","☀"];
+let shuffled=emojis.sort(()=>0.5-Math.random());
+
+let first=null;
+let second=null;
+let lock=false;
+
+const game=document.getElementById("game");
+
+shuffled.forEach((emoji,index)=>{
+
+let card=document.createElement("div");
+card.classList.add("card","hidden");
+card.dataset.emoji=emoji;
+
+card.onclick=function(){
+
+if(lock || !card.classList.contains("hidden")) return;
+
+card.innerText=emoji;
+card.classList.remove("hidden");
+
+if(!first){
+first=card;
+}
+else{
+second=card;
+lock=true;
+
+if(first.dataset.emoji===second.dataset.emoji){
+
+first=null;
+second=null;
+lock=false;
+
+checkWin();
+}
+else{
+setTimeout(()=>{
+first.innerText="";
+second.innerText="";
+first.classList.add("hidden");
+second.classList.add("hidden");
+
+first=null;
+second=null;
+lock=false;
+},800);
+}
+}
+};
+
+game.appendChild(card);
+});
+
+function checkWin(){
+
+let hidden=document.querySelectorAll(".hidden").length;
+
+if(hidden===0){
+document.getElementById("status").innerText="Great job! Your mind is calmer now 🌿";
+}
+
+}
+
+</script>
+
+</body>
+</html>

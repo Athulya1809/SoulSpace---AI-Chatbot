@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Profile – MindCare</title>
+
+    <style>
+        body {
+    margin: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: url("{{ url_for('static', filename='background2.jpeg') }}") no-repeat center center fixed;
+    background-size: cover;
+    color: white;
+}
+
+/* Dark overlay */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: -1;
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+    position: relative;
+    z-index: 2;
+}
+
+.navbar h2 {
+    color: #5cc8ff;
+    margin: 0;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    border: 1px solid #5cc8ff;
+    padding: 8px 14px;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+}
+
+.navbar a:hover {
+    background-color: #5cc8ff;
+    color: black;
+    box-shadow: 0 0 12px #5cc8ff;
+}
+
+/* Profile Card */
+.profile-container {
+    max-width: 650px;
+    margin: 80px auto;
+    background-color: rgba(0, 0, 0, 0.75);
+    padding: 35px;
+    border-radius: 18px;
+    box-shadow: 0 0 25px rgba(92, 200, 255, 0.4);
+    animation: fadeUp 0.8s ease;
+    position: relative;
+    z-index: 2;
+}
+
+h1, h2 {
+    text-align: center;
+    color: #5cc8ff;
+}
+
+label {
+    display: block;
+    margin-top: 15px;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 6px;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+}
+
+textarea {
+    resize: none;
+    height: 80px;
+}
+
+/* Buttons */
+button {
+    margin-top: 20px;
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    background: linear-gradient(135deg, #5cc8ff, #3ea6ff);
+    border: none;
+    border-radius: 30px;
+    color: black;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 25px rgba(92, 200, 255, 1);
+}
+
+/* Toggle button */
+.toggle-btn {
+    background: transparent;
+    border: 1px solid #5cc8ff;
+    color: white;
+}
+
+.toggle-btn:hover {
+    background-color: #5cc8ff;
+    color: black;
+}
+
+/* Password Section */
+.password-section {
+    display: none;
+    margin-top: 25px;
+    animation: fadeUp 0.6s ease;
+}
+
+/* Success & Error Messages */
+.message-success {
+    background: rgba(92, 200, 255, 0.2);
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+}
+
+.message-error {
+    background: rgba(255, 0, 0, 0.3);
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+}
+
+/* Animation */
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+    </style>
+</head>
+
+<body>
+    <!-- NAVBAR -->
+    <div class="navbar">
+        <h2>SoulSpace</h2>
+        <a href="/dashboard">Back</a>
+    </div>
+
+    <!-- PROFILE FORM -->
+    <div class="profile-container">
+        <h1>Edit Profile</h1>
+
+        {% if error %}
+        <div style="background:#b71c1c;padding:10px;border-radius:5px;margin-bottom:10px;">
+        {{ error }}
+        </div>
+        {% endif %}
+
+        {% if success %}
+        <div style="background:#1b5e20;padding:10px;border-radius:5px;margin-bottom:10px;">
+        {{ success }}
+        </div>
+        {% endif %}
+
+        {% if avatar %}
+        <div style="text-align:center;margin-bottom:20px;">
+        <img src="/static/{{ avatar }}"
+            style="
+            width:120px;
+            height:120px;
+            border-radius:50%;
+            border:4px solid #5cc8ff;
+            box-shadow:0 0 15px #5cc8ff;">
+        </div>
+        {% endif %}
+
+        <form method="POST" action="/profile">
+
+            <label>Username</label>
+            <input type="text" name="username" value="{{ user }}" required>
+
+            <label>Email</label>
+            <input type="email" name="email" value="{{ email }}" required>
+
+            <label>Date of Birth</label>
+            <input type="date" name="dob" value="{{ dob }}">
+
+            <label>Age</label>
+            <input type="number" name="age" value="{{ age }}" min="1">
+
+            <label>Gender</label>
+            <select name="gender">
+                <option value="">Select</option>
+                <option value="Female" {% if gender=="Female" %}selected{% endif %}>Female</option>
+                <option value="Male" {% if gender=="Male" %}selected{% endif %}>Male</option>
+                <option value="Other" {% if gender=="Other" %}selected{% endif %}>Other</option>
+            </select>
+
+            <label>Bio</label>
+            <textarea name="bio">{{ bio }}</textarea>
+
+            <label>Wellness Preference</label>
+            <input type="text" name="preference" value="{{ preference }}">
+
+            <button type="submit">Update Profile</button>
+        </form>
+
+        <!-- CHANGE PASSWORD BUTTON -->
+        <button class="toggle-btn" onclick="togglePassword()">Change Password</button>
+        <!-- FEEDBACK BUTTON -->
+        <a href="/feedback">
+            <button type="button" class="toggle-btn">Give Feedback</button>
+        </a>
+        <!-- PASSWORD SECTION -->
+        <div class="password-section" id="passwordSection">
+            <h2>Change Password</h2>
+            <form method="POST" action="/change_password">
+                <label>Current Password</label>
+                <input type="password" name="current_password" placeholder="Current Password" required>
+
+                <label>New Password</label>
+                <input type="password" name="new_password" placeholder="New Password" required>
+
+                <label>Confirm New Password</label>
+                <input type="password" name="confirm_password" Placeholder="Confirm Password" required>
+
+                <button type="submit">Update Password</button>
+            </form>
+        </div>
+    </div>
+
+<script>
+function togglePassword() {
+    let section = document.getElementById("passwordSection");
+    section.style.display =
+        section.style.display === "block" ? "none" : "block";
+}
+</script>
+
+</body>
+</html>

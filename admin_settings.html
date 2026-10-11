@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin – System Settings</title>
+
+<style>
+
+/* BODY */
+body {
+    margin: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: url("{{ url_for('static', filename='background2.jpeg') }}") no-repeat center center fixed;
+    background-size: cover;
+    color: white;
+}
+
+/* Dark overlay */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: -1;
+}
+
+/* HEADER (Same as Feedback Page) */
+.header{
+    background:rgba(30,30,30,0.85);
+    padding:15px 40px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    backdrop-filter:blur(8px);
+    position:relative;
+    z-index:2;
+}
+
+.header h2{
+    color:#5cc8ff;
+    margin:0;
+}
+
+.header a{
+    color:white;
+    text-decoration:none;
+    border:1px solid #5cc8ff;
+    padding:8px 14px;
+    border-radius:20px;
+    transition:all 0.3s ease;
+}
+
+.header a:hover{
+    background:#5cc8ff;
+    color:black;
+    box-shadow:0 0 12px #5cc8ff;
+}
+
+/* CONTENT */
+.container{
+    padding:40px;
+    max-width:600px;
+    margin:auto;
+    position:relative;
+    z-index:2;
+}
+
+/* SETTINGS CARD (Same style as feedback card) */
+.settings-card{
+    background:rgba(30,30,30,0.9);
+    padding:30px;
+    border-radius:18px;
+    box-shadow:0 0 20px rgba(92,200,255,0.25);
+    animation:fadeUp 0.6s ease;
+}
+
+.settings-card label{
+    display:block;
+    margin-top:20px;
+    font-size:15px;
+}
+
+.settings-card input[type="checkbox"]{
+    margin-right:10px;
+}
+
+/* BUTTON */
+.settings-card button{
+    margin-top:30px;
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:20px;
+    background:#5cc8ff;
+    color:black;
+    cursor:pointer;
+    transition:0.3s ease;
+}
+
+.settings-card button:hover{
+    box-shadow:0 0 15px #5cc8ff;
+}
+
+/* ANIMATION */
+@keyframes fadeUp{
+    from{opacity:0; transform:translateY(15px);}
+    to{opacity:1; transform:translateY(0);}
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<div class="header">
+    <h2>⚙ System Settings</h2>
+    <a href="/admin/dashboard">Back</a>
+</div>
+
+<!-- CONTENT -->
+<div class="container">
+
+    <div class="settings-card">
+        <form method="POST">
+
+            <label>
+                <input type="checkbox" name="registration_enabled"
+                {% if settings.registration_enabled %}checked{% endif %}>
+                Enable User Registration
+            </label>
+
+            <label>
+                <input type="checkbox" name="feedback_enabled"
+                {% if settings.feedback_enabled %}checked{% endif %}>
+                Enable Feedback Submission
+            </label>
+
+            <label>
+                <input type="checkbox" name="maintenance_mode"
+                {% if settings.maintenance_mode %}checked{% endif %}>
+                Enable Maintenance Mode
+            </label>
+
+            <button type="submit">Save Settings</button>
+
+        </form>
+    </div>
+
+</div>
+
+</body>
+</html>

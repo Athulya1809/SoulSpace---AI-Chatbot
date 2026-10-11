@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin Dashboard – MindCare</title>
+
+<style>
+/* BODY */
+body {
+    margin: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    color: white;
+    overflow-x: hidden;
+}
+
+/* Background Video */
+.bg-video {
+    position: fixed;
+    top: 0;
+    left: 0;
+    min-width: 100%;
+    min-height: 100%;
+    object-fit: cover;
+    z-index: -2;
+}
+
+/* Dark Overlay */
+.video-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: -1;
+}
+
+/* FLOATING ORBS */
+.orb{
+    position:absolute;
+    width:220px;
+    height:220px;
+    background:rgba(76,175,80,0.18);
+    border-radius:50%;
+    filter:blur(90px);
+    animation:float 6s ease-in-out infinite;
+    z-index:0;
+}
+
+/* HEADER */
+.header{
+    background:rgba(0,0,0,0.6);
+    padding:15px 40px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    backdrop-filter:blur(8px);
+    position:relative;
+    z-index:2;
+}
+
+.header h2{
+    color:#5cc8ff;
+    margin:0;
+}
+
+.header a{
+    color:white;
+    text-decoration:none;
+    border:1px solid #5cc8ff;
+    padding:8px 14px;
+    border-radius:20px;
+    transition:all 0.3s ease;
+}
+
+.header a:hover{
+    background:#5cc8ff;
+    color:black;
+    box-shadow:0 0 12px #5cc8ff;
+}
+
+/* CONTENT */
+.container{
+    padding:40px;
+    max-width:1100px;
+    margin:auto;
+    position:relative;
+    z-index:2;
+}
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+    gap:25px;
+    margin-top:30px;
+}
+
+.card{
+    background:rgba(30,30,30,0.9);
+    padding:25px;
+    border-radius:18px;
+    box-shadow:0 0 20px rgba(0,0,0,0.6);
+    animation:fadeUp 0.6s ease;
+    transition:transform 0.3s ease;
+}
+
+.card:hover{
+    transform:translateY(-8px);
+    box-shadow:0 0 30px #5cc8ff;
+}
+
+.card h3{
+    color:#5cc8ff;
+    margin-bottom:10px;
+}
+
+.card p{
+    font-size:28px;
+    font-weight:bold;
+}
+
+/* ACTION BUTTONS */
+.actions{
+    margin-top:40px;
+    display:flex;
+    gap:20px;
+    flex-wrap:wrap;
+}
+
+.action-btn{
+    border:1px solid #5cc8ff;
+    background:transparent;
+    color:white;
+    padding:12px 22px;
+    border-radius:20px;
+    cursor:pointer;
+    transition:0.3s;
+    text-decoration:none;
+}
+
+.action-btn:hover{
+    background:#5cc8ff;
+    color:black;
+    box-shadow:0 0 12px #5cc8ff;
+}
+
+/* ANIMATION */
+@keyframes fadeUp{
+    from{opacity:0; transform:translateY(15px);}
+    to{opacity:1; transform:translateY(0);}
+}
+</style>
+</head>
+
+<body>
+    <!-- Background Video -->
+<video autoplay muted loop playsinline class="bg-video">
+    <source src="{{ url_for('static', filename='background1.mp4') }}" type="video/mp4">
+</video>
+<div class="video-overlay"></div>
+
+<!-- HEADER -->
+<div class="header">
+    <h2>👑 Admin Dashboard</h2>
+    <a href="/admin/logout">Logout</a>
+</div>
+
+<!-- CONTENT -->
+<div class="container">
+
+    <p>Welcome Admin 👋 Manage users and monitor platform activity.</p>
+
+    <!-- STATS -->
+    <div class="cards">
+
+        <div class="card">
+            <h3>👥 Total Users</h3>
+            <p>{{ user_count }}</p>
+        </div>
+
+        <div class="card">
+            <h3>📔 Journal Entries</h3>
+            <p>{{ journal_count }}</p>
+        </div>
+
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="actions">
+        <a href="/admin/users" class="action-btn">👥 View Users</a>
+        <a href="/admin/journals" class="action-btn">📜 View Journals</a>
+        <a href="/admin/analytics" class="action-btn">📊 Analytics</a>
+        <a href="/admin/feedbacks" class="action-btn">⭐ View Feedback</a>
+        <a href="/admin/settings" class="action-btn">⚙ System Settings</a>
+    </div>
+
+</div>
+
+</body>
+</html>

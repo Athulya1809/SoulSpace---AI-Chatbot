@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin – User Feedback</title>
+
+<style>
+
+/* BODY */
+body {
+    margin: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: url("{{ url_for('static', filename='background2.jpeg') }}") no-repeat center center fixed;
+    background-size: cover;
+    color: white;
+}
+
+/* Dark overlay */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: -1;
+}
+
+/* HEADER (Same as Journals) */
+.header{
+    background:rgba(30,30,30,0.85);
+    padding:15px 40px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    backdrop-filter:blur(8px);
+    position:relative;
+    z-index:2;
+}
+
+.header h2{
+    color:#5cc8ff;
+    margin:0;
+}
+
+.header a{
+    color:white;
+    text-decoration:none;
+    border:1px solid #5cc8ff;
+    padding:8px 14px;
+    border-radius:20px;
+    transition:all 0.3s ease;
+}
+
+.header a:hover{
+    background:#5cc8ff;
+    color:black;
+    box-shadow:0 0 12px #5cc8ff;
+}
+
+/* CONTENT */
+.container{
+    padding:40px;
+    max-width:1100px;
+    margin:auto;
+    position:relative;
+    z-index:2;
+}
+
+/* FEEDBACK CARD (Match Journal Card) */
+.feedback-card{
+    background:rgba(30,30,30,0.9);
+    padding:25px;
+    border-radius:18px;
+    margin-bottom:25px;
+    box-shadow:0 0 20px rgba(92,200,255,0.25);
+    animation:fadeUp 0.6s ease;
+}
+
+.feedback-card h3{
+    color:#5cc8ff;
+    margin-bottom:5px;
+}
+
+.feedback-card small{
+    opacity:0.7;
+}
+
+.feedback-card p{
+    margin-top:10px;
+    line-height:1.6;
+}
+
+/* Rating */
+.rating{
+    color:gold;
+    font-size:18px;
+}
+
+/* EMPTY */
+.empty{
+    opacity:0.7;
+    text-align:center;
+    margin-top:40px;
+}
+
+/* ANIMATION */
+@keyframes fadeUp{
+    from{opacity:0; transform:translateY(15px);}
+    to{opacity:1; transform:translateY(0);}
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<div class="header">
+    <h2>⭐ User Feedback</h2>
+    <a href="/admin/dashboard">Back</a>
+</div>
+
+<!-- CONTENT -->
+<div class="container">
+
+    <p>All submitted user feedback is listed below.</p>
+
+    {% if feedbacks %}
+        {% for feedback in feedbacks %}
+        <div class="feedback-card">
+
+            <h3>{{ feedback.email }}</h3>
+            <small>{{ feedback.date }}</small>
+
+            <p><strong>Website Feedback:</strong><br>
+            {{ feedback.website_feedback }}</p>
+
+            <p><strong>AI Feedback:</strong><br>
+            {{ feedback.ai_feedback }}</p>
+
+            <p>
+                <strong>Rating:</strong>
+                <span class="rating">
+                    {% for i in range(feedback.rating) %}
+                        ★
+                    {% endfor %}
+                </span>
+            </p>
+
+        </div>
+        {% endfor %}
+    {% else %}
+        <p class="empty">No feedback submitted yet.</p>
+    {% endif %}
+
+</div>
+
+</body>
+</html>

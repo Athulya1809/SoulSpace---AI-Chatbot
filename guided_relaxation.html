@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Guided Relaxation</title>
+
+<style>
+body{
+margin:0;
+font-family:"Segoe UI",sans-serif;
+background: url("{{ url_for('static', filename='act2.jpeg') }}") no-repeat center center fixed;
+background-size: cover;
+color:white;
+}
+
+/* Dark overlay */
+body::before{
+content:"";
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.65);
+z-index:-1;
+}
+
+/* Header */
+.header{
+display:flex;
+justify-content:space-between;
+padding:15px 40px;
+background:rgba(0,0,0,0.6);
+align-items:center;
+backdrop-filter:blur(8px);
+position:relative;
+z-index:2;
+}
+
+.header h3{
+margin:0;
+color:#5cc8ff;
+}
+
+/* Back button */
+.back-btn{
+color:white;
+text-decoration:none;
+border:1px solid #5cc8ff;
+padding:8px 14px;
+border-radius:20px;
+font-size:14px;
+transition:all 0.3s ease;
+}
+
+.back-btn:hover{
+background:#5cc8ff;
+color:black;
+box-shadow:0 0 12px #5cc8ff;
+}
+
+/* Main layout */
+.main{
+display:flex;
+padding:40px;
+gap:40px;
+position:relative;
+z-index:2;
+}
+
+.left{
+flex:1;
+text-align:center;
+}
+
+.right{
+flex:1;
+}
+
+/* Relaxation circle */
+.circle{
+width:180px;
+height:180px;
+border-radius:50%;
+background:linear-gradient(135deg,#5cc8ff,#3ea6ff);
+margin:30px auto;
+animation:float 5s infinite ease-in-out;
+box-shadow:0 0 25px rgba(92,200,255,0.8);
+}
+
+@keyframes float{
+0%{transform:translateY(0);}
+50%{transform:translateY(-15px);}
+100%{transform:translateY(0);}
+}
+
+/* Buttons */
+.action-btn{
+border:1px solid #5cc8ff;
+background:transparent;
+color:white;
+padding:10px 18px;
+border-radius:20px;
+cursor:pointer;
+transition:0.3s;
+}
+
+.action-btn:hover{
+background:#5cc8ff;
+color:black;
+box-shadow:0 0 12px #5cc8ff;
+}
+
+/* Glass boxes */
+.tip-box,
+.music-box{
+background:rgba(0,0,0,0.75);
+padding:20px;
+border-radius:18px;
+box-shadow:0 0 25px rgba(92,200,255,0.4);
+}
+
+.music-box{
+margin:20px 40px 40px 40px;
+position:relative;
+z-index:2;
+}
+
+/* Music Items */
+.music-item{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin:12px 0;
+}
+
+/* Music Buttons */
+.music-btn{
+border:1px solid #5cc8ff;
+background:transparent;
+color:white;
+padding:6px 10px;
+border-radius:20px;
+cursor:pointer;
+margin-left:5px;
+transition:0.3s;
+}
+
+.music-btn:hover{
+background:#5cc8ff;
+color:black;
+box-shadow:0 0 12px #5cc8ff;
+transform:scale(1.05);
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- Background Sounds -->
+<audio id="rainSound" loop>
+<source src="/static/sounds/background.mp3" type="audio/mpeg">
+</audio>
+
+<div class="header">
+<h3>🌙 Guided Relaxation</h3>
+<a href="/activities" class="back-btn">Back</a>
+</div>
+
+<div class="main">
+
+<div class="left">
+
+<h2 id="phase">Prepare to Relax</h2>
+<h1 id="timer">3</h1>
+
+<div class="circle"></div>
+
+<button class="action-btn" onclick="startRelaxation()">
+▶ Start Relaxation
+</button>
+
+</div>
+
+<div class="right">
+<div class="tip-box">
+<h3>Relaxation Guide</h3>
+<p>✔ Sit comfortably</p>
+<p>✔ Relax shoulders</p>
+<p>✔ Focus on breathing</p>
+<p>✔ Release tension slowly</p>
+</div>
+</div>
+
+</div>
+
+<div class="music-box">
+<audio id="musicPlayer" controls style="display:none;"></audio>
+
+<h3>🎧 Relaxation Music</h3>
+
+<div class="music-item">
+<span>🌧 Rain Sounds</span>
+<div>
+<button class="music-btn"
+onclick="playTrack('/static/sounds/rain.mp3')">
+▶ Play
+</button>
+<button class="music-btn"
+onclick="stopMusic()">
+⏹ Stop
+</button>
+</div>
+</div>
+
+<div class="music-item">
+<span>🌊 Ocean Waves</span>
+<div>
+<button class="music-btn"
+onclick="playTrack('/static/sounds/ocean.mp3')">
+▶ Play
+</button>
+<button class="music-btn"
+onclick="stopMusic()">
+⏹ Stop
+</button>
+</div>
+</div>
+
+<div class="music-item">
+<span>🌲 Forest Ambience</span>
+<div>
+<button class="music-btn"
+onclick="playTrack('/static/sounds/calm.mp3')">
+▶ Play
+</button>
+<button class="music-btn"
+onclick="stopMusic()">
+⏹ Stop
+</button>
+</div>
+</div>
+
+<div class="music-item">
+<span>🎹 Calm Piano</span>
+<div>
+<button class="music-btn"
+onclick="playTrack('/static/sounds/piano.mp3')">
+▶ Play
+</button>
+<button class="music-btn"
+onclick="stopMusic()">
+⏹ Stop
+</button>
+</div>
+</div>
+
+<div class="music-item">
+<span>🎹 Guitar </span>
+<div>
+<button class="music-btn"
+onclick="playTrack('/static/sounds/guitar.mp3')">
+▶ Play
+</button>
+<button class="music-btn"
+onclick="stopMusic()">
+⏹ Stop
+</button>
+</div>
+</div>
+
+<div class="music-item">
+<span>🌲 Relaxation</span>
+<div>
+<button class="music-btn"
+onclick="playTrack('/static/sounds/relax.mp3')">
+▶ Play
+</button>
+<button class="music-btn"
+onclick="stopMusic()">
+⏹ Stop
+</button>
+</div>
+</div>
+
+</div>
+
+<script>
+
+function speak(text){
+
+const voice=new SpeechSynthesisUtterance(text);
+voice.rate=0.9;
+voice.pitch=1;
+voice.volume=1;
+
+speechSynthesis.cancel();
+speechSynthesis.speak(voice);
+
+}
+
+let steps=[
+{phase:"Close your eyes gently",duration:5},
+{phase:"Relax your shoulders",duration:5},
+{phase:"Take slow deep breaths",duration:6},
+{phase:"Release all tension",duration:6}
+];
+
+let index=0;
+
+function startRelaxation(){
+
+document.getElementById("rainSound").play();
+
+index=0;
+runStep();
+
+}
+
+function runStep(){
+
+if(index>=steps.length){
+
+document.getElementById("phase").innerText="Relaxation Complete";
+document.getElementById("timer").innerText="Well Done";
+
+document.getElementById("rainSound").pause();
+document.getElementById("calmMusic").pause();
+
+speak("Relaxation complete. Great job.");
+
+saveRelaxation();
+return;
+}
+
+let step=steps[index];
+let time=step.duration;
+
+document.getElementById("phase").innerText=step.phase;
+speak(step.phase);
+
+let interval=setInterval(()=>{
+
+document.getElementById("timer").innerText=time;
+time--;
+
+if(time<0){
+clearInterval(interval);
+index++;
+runStep();
+}
+
+},1000);
+
+}
+
+async function saveRelaxation(){
+
+await fetch("/relaxation_complete",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({completed:true})
+});
+
+}
+
+</script>
+
+<script>
+let player=document.getElementById("musicPlayer");
+function playTrack(src){
+player.pause();
+player.currentTime=0;
+player.src=src;
+player.play();
+}
+
+function stopMusic(){
+player.pause();
+player.currentTime=0;
+}
+</script>
+
+</body>
+</html>

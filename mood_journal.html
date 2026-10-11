@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Conversation Journal – MindCare</title>
+
+<style>
+body{
+margin:0;
+font-family:"Segoe UI",sans-serif;
+background: url("{{ url_for('static', filename='act3.jpeg') }}") no-repeat center center fixed;
+background-size: cover;
+color:white;
+}
+
+/* Dark overlay */
+body::before{
+content:"";
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.65);
+z-index:-1;
+}
+
+/* HEADER */
+.header{
+background:rgba(0,0,0,0.7);
+padding:15px 40px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+backdrop-filter:blur(8px);
+position:relative;
+z-index:2;
+}
+
+.header h2{
+color:#5cc8ff;
+margin:0;
+}
+
+.header a{
+color:white;
+text-decoration:none;
+border:1px solid #5cc8ff;
+padding:8px 14px;
+border-radius:20px;
+transition:all 0.3s ease;
+}
+
+.header a:hover{
+background-color:#5cc8ff;
+color:black;
+box-shadow:0 0 12px #5cc8ff;
+}
+
+/* CONTENT AREA */
+.container{
+padding:40px;
+max-width:1000px;
+margin:auto;
+position:relative;
+z-index:2;
+}
+
+/* SUMMARY DISPLAY */
+.summary-box{
+max-height:450px;
+overflow-y:auto;
+}
+
+.summary-card{
+background:rgba(0,0,0,0.75);
+padding:25px;
+border-radius:18px;
+margin-bottom:20px;
+box-shadow:0 0 20px rgba(92,200,255,0.25);
+animation:fadeUp 0.6s ease;
+transition:transform 0.3s ease;
+}
+
+.summary-card:hover{
+transform:translateY(-5px);
+box-shadow:0 0 30px rgba(92,200,255,0.6);
+}
+
+.summary-card small{
+opacity:0.8;
+}
+
+/* Animations */
+@keyframes fadeUp{
+from{opacity:0; transform:translateY(15px);}
+to{opacity:1; transform:translateY(0);}
+}
+
+/* Mood Tags */
+.mood-tag {
+    padding: 4px 10px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.mood-tag.positive {
+    background: #5cc8ff;
+    color: black;
+}
+
+.mood-tag.negative {
+    background: #ff5252;
+    color: white;
+}
+
+.mood-tag.neutral {
+    background: #999;
+    color: black;
+}
+
+/* Delete Button */
+.delete-btn {
+    margin-top: 10px;
+    padding: 6px 12px;
+    border-radius: 10px;
+    border: none;
+    background: #ff5252;
+    color: white;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.delete-btn:hover{
+    box-shadow:0 0 15px rgba(255,82,82,0.8);
+}
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<div class="header">
+<h2>📜 Conversation Journal</h2>
+<a href="/activities">Back</a>
+</div>
+
+<!-- CONTENT -->
+<div class="container">
+
+<p>Your past AI companion conversations appear here like personal diary reflections.</p>
+
+<div class="summary-box">
+{% if entries %}
+    {% for entry in entries %}
+   <div class="summary-card" onclick="toggleEntry(this)">
+
+<p class="preview">
+{{ entry.summary[:120] }}...
+</p>
+
+<p class="full" style="display:none; white-space:pre-line;">
+{{ entry.summary }}
+</p>
+
+<small>
+📅 {{ entry.date }} |
+🧠 Mood:
+<span class="mood-tag {{ entry.mood }}">
+    {{ entry.mood.capitalize() }}
+</span>
+</small>
+
+<br>
+
+<button class="delete-btn"
+        onclick="event.stopPropagation(); deleteEntry('{{ loop.index0 }}')">
+Delete
+</button>
+
+</div>
+    {% endfor %}
+{% else %}
+    <p>No conversations saved yet.</p>
+{% endif %}
+</div>
+
+</div>
+<script>
+function toggleEntry(card) {
+    const preview = card.querySelector(".preview");
+    const full = card.querySelector(".full");
+
+    if (full.style.display === "none") {
+        preview.style.display = "none";
+        full.style.display = "block";
+    } else {
+        full.style.display = "none";
+        preview.style.display = "block";
+    }
+}
+
+function deleteEntry(index) {
+
+    fetch("/delete_journal", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({index: index})
+    })
+    .then(res => res.json())
+    .then(data => {
+        location.reload();
+    });
+}
+
+</script>
+</body>
+</html>
